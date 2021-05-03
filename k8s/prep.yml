@@ -1,0 +1,29 @@
+- name: "Добавление репозитория"
+  yum:
+    name: https://elrepo.org/linux/kernel/el7/x86_64/RPMS/elrepo-release-7.0-5.el7.elrepo.noarch.rpm
+    state: latest
+
+- name: "Включаю репозиторий"
+  shell: yum-config-manager --enable elrepo-kernel
+
+- name: "Установка ядра"
+  yum:
+    name: kernel-ml,kernel-ml-devel,kernel-ml-headers,libselinux-python
+    state: latest
+
+- name: "Устанавливаю ядро по умолчанию"
+#  shell: OS_VERSION=$(grep '^NAME=' /etc/os-release |awk -F\= '{print $2}'|tr -d '"') && KERNEL_VERSION=$(grep 'menuentry' /boot/grub2/grub.cfg |grep -o "$OS_VERSION\ (5.* (Core)") && grub2-set-default $$KERNEL_VERSION
+  shell: grub2-set-default 0
+
+- name: "Выключаю firewalld"
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: "Отключаю selinux"
+  selinux:
+    state: disabled
+
+- name: "Перезагружаю виртуальную машину"
+  reboot:
