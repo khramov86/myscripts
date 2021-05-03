@@ -25,5 +25,34 @@
   selinux:
     state: disabled
 
+- name: Создаю директорию
+  file:
+    path: /root/.ssh
+    mode: 700
+    owner: root
+    group: root
+    state: directory
+
+- name: Копирую файл ключей
+  copy:
+    src: /root/kubespray/kube.pub
+    dest: /root/.ssh/authorized_keys
+    mode: 600
+    owner: root
+    group: root
+
+- name: Выключаем swap
+  shell:
+    cmd: |
+      swapoff -a
+  args:
+    executable: /bin/bash
+
+- name: Убираем swap из автозагрузки
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
 - name: "Перезагружаю виртуальную машину"
   reboot:
