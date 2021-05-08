@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+hosts = {
+    "client-net1" => "10.10.12.2",
+    "fw-net1" => "10.10.12.1",
+    "fw-net2" => "10.10.11.1",
+    "client-net2" => "10.10.11.2"
+}
+Vagrant.configure("2") do |config|
+        # всегда используем небезопасный ключ Vagrant
+        config.ssh.insert_key = false
+        # перенаправляем ssh-агент, чтобы получить легкий доступ к разным узлам
+        config.ssh.forward_agent = true
+        check_guest_additions = false
+        functional_vboxsf = false
+        config.vm.box = "generic/ubuntu1604"
+    hosts.each do |name, ip|
+        config.vm.define name do |machine|
+            machine.vm.network :private_network, ip: ip
+            machine.vm.provider "virtualbox" do |v|
+                config.vm.hostname = name
+                v.name = name
+                v.memory = 512
+                v.cpus = 1
+                v.customize ["modifyvm", :id, "--groups", "/k8s"]
+            end
+        end
+    end
+end
