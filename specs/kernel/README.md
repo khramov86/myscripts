@@ -56,3 +56,14 @@ make
 make modules_install
 make install
 ```
+## Выбор другого ядра для загрузки
+
+Посмотреть список ядре
+```
+awk -F\' '$1=="menuentry " {print i++ " : " $2}' /etc/grub2.cfg
+```
+Установка ядра для загрузки
+```
+grub2-set-default 0
+grub2-mkconfig -o /boot/grub2/grub.cfg
+```
