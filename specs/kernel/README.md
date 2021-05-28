@@ -38,7 +38,18 @@ yum install scl-utils
 ```
 
 ## Сборка ядра
+Дополнительные зависимости
 ```
+rpm -Uvh http://mirror.centos.org/centos/7/extras/x86_64/Packages/centos-release-scl-rh-2-3.el7.centos.noarch.rpm
+rpm -Uvh http://mirror.centos.org/centos/7/extras/x86_64/Packages/centos-release-scl-2-3.el7.centos.noarch.rpm
+```
+Можно взять конфигурацию у текущего ядра
+```
+cp -v /boot/config-$(uname -r) .config
+```
+Порядок сборки
+```
+make menuconfig
 make bzImage
 make modules
 make
