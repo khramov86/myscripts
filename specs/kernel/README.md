@@ -70,10 +70,6 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 
 ## Уменьшение размера ядра
 
-
-## Уменьшение размера ядра
-
-
 In `/etc/initramfs-tools/initramfs.conf`, set `MODULES=dep` instead of `MODULES=most`. The initrd build process will work out what modules you need rather than including a wide variety of things. Note, however, that this makes your boot process very dependent on your hardware and if you need to use a different set of hardware (in particular, drives) the initrd may not work.
 
 Additionally you can choose a better compression algorithm, the default should still be gzip, but xz (or lzma2) is also available via `COMPRESS=xz`. Of course you need to have xz-utils installed. The initial compression takes longer, but decompression during boot shouldn't take much longer. Both options together may also reduce your boot time a little bit.
