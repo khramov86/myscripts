@@ -58,7 +58,10 @@ wget https://download.strongswan.org/strongswan-${strongswan_ver}.tar.gz
 tar xzf strongswan-${strongswan_ver}.tar.gz
 rm -f strongswan-${strongswan_ver}.tar.gz
 cd strongswan-${strongswan_ver}
-./configure --disable-static --sysconfdir=/etc/strongswan --enable-ha --bindir=/usr/bin/ --with-linux-headers=/root/linux-5.10.42/
+. /opt/rh/devtoolset-9/enable
+./configure --disable-static --sysconfdir=/etc/strongswan --enable-ha --bindir=/usr/bin/ --with-linux-headers=/root/linux-${linux_ver}/
+make -j $(nproc)
+make install
 ```
 
 ## Сборка
