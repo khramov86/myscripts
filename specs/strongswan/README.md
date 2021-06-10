@@ -65,6 +65,20 @@ make -j $(nproc)
 make install
 ```
 
+### Подготовка к сборке
+
+`make defconfig` - подготовить дефолтный конфиг `.config`
+
+`make menuconfig` - конфигурировать через утилиту ncurses
+
+### Сборка ядра
+```
+make bzImage -j $(nproc)
+make modules -j $(nproc)
+make -j $(nproc)
+make modules_install
+make install
+```
 ## Сборка
 ```
 rpmbuild --undefine=_disable_source_fetch -ba strongswan.spec
