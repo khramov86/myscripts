@@ -2,7 +2,7 @@
 
 ## Зависимости
 ```
-yum install -y systemd-devel gmp-devel libcurl-devel openldap-devel openssl-devel sqlite-devel gettext-devel trousers-devel libxml2-devel pam-devel json-c-devel libgcrypt-devel iptables-devel NetworkManager-libnm-devel rpm-build
+yum install -y wget systemd-devel gmp-devel libcurl-devel openldap-devel openssl-devel sqlite-devel gettext-devel trousers-devel libxml2-devel pam-devel json-c-devel libgcrypt-devel iptables-devel NetworkManager-libnm-devel rpm-build
 yum groupinstall -y 'Development Tools'
 ```
 ## Сборка с kernel-include
@@ -43,9 +43,27 @@ enabled=1
 ```
 yum install devtoolset-9 -y
 ```
+```
+linux_ver=5.10.42
+strongswan_ver=5.9.2
+wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${linux_ver}.tar.xz
+xz -d linux-${linux_ver}.tar.xz && tar xf linux-${linux_ver}.tar
+rm -f linux-{linux_ver}.tar
+wget https://download.strongswan.org/testing/ha-5.10-abicompat.patch.bz2
+bzip2 -d ha-5.10-abicompat.patch.bz2
+pushd linux-5.10.42
+patch -p1 < ../ha-5.10-abicompat.patch
+popd
+wget https://download.strongswan.org/strongswan-${strongswan_ver}.tar.gz
+tar xzf strongswan-${strongswan_ver}.tar.gz
+rm -f strongswan-${strongswan_ver}.tar.gz
+cd strongswan-${strongswan_ver}
+./configure --disable-static --sysconfdir=/etc/strongswan --enable-ha --bindir=/usr/bin/ --with-linux-headers=/root/linux-5.10.42/
+```
 
 ## Сборка
 ```
 rpmbuild --undefine=_disable_source_fetch -ba strongswan.spec
+
 ```
 
