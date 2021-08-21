@@ -8,11 +8,10 @@ PRIVATE_CERTS_DIR=${EASY_RSA_DIR}/pki/private
 TLS_KEY_PATH=./server/tc.key
 if [ -z $USERNAME ]
   then echo -e "First parameter shouldn't be empty\n"
-  while [ -z $USERNAME ]
-    do
-      read -p "Please, enter username: " USERNAME
-    done
-  #exit 1
+    while [ -z $USERNAME ]
+      do
+        read -p "Please, enter username: " USERNAME
+      done
 fi
 echo "Generating config for username $USERNAME"
 check_if_user_exists()
@@ -23,9 +22,9 @@ else
   echo "There is no such username, please recreate certificate"
   AVAILABLE_CERTS=$(ls ./easy-rsa/pki/issued/ |grep -v server |awk -F\. '{print $1}')
   echo "Please chose one of these users"
-  for USER in $AVAILABLE_CERTS
-    do echo "* $USER"
-  done 
+    for USER in $AVAILABLE_CERTS
+      do echo "* $USER"
+    done 
   exit 1
 fi
 }
