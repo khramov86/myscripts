@@ -31,48 +31,34 @@ while [ $# -gt 0 ]
         ;;
       -s|--stats )
         STATS=1
-  if ($5 > max){
-    max=$5
-    max_name=$NF
-  }
-  if ($5 < min){
-  min=$5
-  min_name=$NF
-  }
-  }
-  END{
-    print "SUM:", sum/1024/1024, " MB"
-    print "Files: ", NR
-    if (stats==1) {
-    print "Min file is:", min_name, ",size is:", min/1024, "KB"
-    print "Max file is:", max_name, ",size is:", max/1024, "KB"
-    }
-  }
-  '
+        shift
+        ;;
+      -h|--help )
+        shift
+        usage
+        ;;
+      *)
+        echo -e "\033[0;31mWrong key sent to script"
+        usage
+        echo -e "\033[0;37m"
+        exit 1
+        ;;
+    esac
+done
+
+if [ $LOC_SET -ne 1 ]; then
+  LOCATION=$(pwd)
+fi
+echo "Location is $LOCATION"
+echo "Extension trying to find is $EXT"
+if [ "$EXT" != "" ]; then
+  ls -l "$LOCATION" |awk '/^-/' | grep "\.$EXT$" &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "No file with extension $EXT was found"
+    exit 2
+  fi
+  # count size of files with specific extension
+  ls -l "$LOCATION" | awk '/^-/' | grep "\.$EXT" |awk -v stats=$STATS -f size.awk
 else
-  ls -l $LOCATION | awk '/^-/' | awk -v stats=$STATS '{
-  sum+=$5
-  if (NR==1) {
-    min=$5
-    max=$5
-    min_name=$NF
-    max_name=$NF
-    }
-  if ($5 > max){
-    max=$5
-    max_name=$NF
-  }
-  if ($5 < min){
-  min=$5
-  min_name=$NF
-  }
-  }
-  END{
-    print "SUM:", sum/1024/1024, " MB"
-    print "Files: ", NR
-    if (stats==1) {
-    print "Min file is:", min_name, ",size is:", min/1024, "KB"
-    print "Max file is:", max_name, ",size is:", max/1024, "KB"
-    }
-  }'
+  ls -l $LOCATION | awk '/^-/' | awk -v stats=$STATS -f size.awk
 fi
