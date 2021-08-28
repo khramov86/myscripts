@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
+echo "This is getopts index $OPTIND"
+
 while getopts a:b:cd param;do
+
+echo "This is getopts index $OPTIND"
+
   case $param in
     a)  echo ""
         echo "parameter 'a' with argument: $OPTARG"
