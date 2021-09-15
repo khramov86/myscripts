@@ -111,3 +111,8 @@ spec:
 ```
 sudo rpm-ostree uninstall --all
 ```
+### Команды
+Скачать install tools для релиза
+```
+oc adm release extract --tools quay.io/openshift/okd:4.7.0-0.okd-2021-08-07-063045
+```
