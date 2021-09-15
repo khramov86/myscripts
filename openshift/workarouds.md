@@ -56,7 +56,7 @@ oc get po -A |grep Image |awk '{print "oc -n",$1,"delete po",$2}'
 ```
 fgrep enabled /etc/yum.repos.d/* | uniq -c
 ```
-Можно задеплоить machineconfig
+Попробовать задеплоить machineconfig
 ```yaml
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfig
