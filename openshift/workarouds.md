@@ -116,3 +116,15 @@ sudo rpm-ostree uninstall --all
 ```
 oc adm release extract --tools quay.io/openshift/okd:4.7.0-0.okd-2021-08-07-063045
 ```
+Получить hash для пакетов
+```
+oc adm release info
+```
+Для операционной системы
+```
+oc adm release info |grep machine-os-content
+```
+Обновить FCOS
+```
+/run/bin/machine-config-daemon pivot quay.io/openshift/okd-content@sha256:64f1cc9663a57d3bb9cc413502c9ccc04097be2033cf726aaf535e0e7ad5b5c4
+```
