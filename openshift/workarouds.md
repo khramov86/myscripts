@@ -41,3 +41,12 @@ rm -rf /var/lib/containers/storage/overlay-images
 ```
 watch "crictl ps -a"
 ```
+### У части подов ошибка imagepullbackoff 
+Просмотреть поды с проблемами pull image
+```
+oc get po -A |grep Image
+```
+Попробоват пересоздать
+```
+oc get po -A |grep Image |awk '{print "oc -n",$1,"delete po",$2}'
+```
