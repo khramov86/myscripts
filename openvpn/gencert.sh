@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 echo "Starting script"
-OPENVPN_SERVER_HOST=IP_OR_HOSTNAME
+OPENVPN_SERVER_HOST="HOST_OR_IP"
 USERNAME=$1
-EASY_RSA_DIR=./easy-rsa
+EASY_RSA_DIR=./
 PUBLIC_CERTS_DIR=${EASY_RSA_DIR}/pki/issued
 PRIVATE_CERTS_DIR=${EASY_RSA_DIR}/pki/private
-TLS_KEY_PATH=./server/tc.key
+TLS_KEY_PATH=./pki/ta.key
 if [ -z $USERNAME ]
   then echo -e "First parameter shouldn't be empty\n"
     while [ -z $USERNAME ]
@@ -20,7 +20,7 @@ if [ -f $PUBLIC_CERTS_DIR/$USERNAME.crt ]
   then echo -e "Certificate for $USERNAME exists\ncontinue"
 else
   echo "There is no such username, please recreate certificate"
-  AVAILABLE_CERTS=$(ls ./easy-rsa/pki/issued/ |grep -v server |awk -F\. '{print $1}')
+  AVAILABLE_CERTS=$(ls ${EASY_RSA_DIR}/pki/issued/ |grep -v server |awk -F\. '{print $1}')
   echo "Please chose one of these users"
     for USER in $AVAILABLE_CERTS
       do echo "* $USER"
@@ -40,14 +40,14 @@ USER_KEY=$(echo "<key>
 $(cat ${PRIVATE_CERTS_DIR}/${USERNAME}.key)
 </key>")
 CA_CERT=$(echo "<ca>
-$(cat ./easy-rsa/pki/ca.crt)
+$(cat ${EASY_RSA_DIR}/pki/ca.crt)
 </ca>")
 echo "Creating OVPN config $USERNAME.ovpn"
 echo "client
 resolv-retry infinite
 nobind
 remote $OPENVPN_SERVER_HOST
-proto tcp
+proto udp 
 dev tun
 ;comp-lzo
 cipher AES-256-CBC
@@ -63,6 +63,7 @@ ${CA_CERT}
 ${USER_CERT}
 ${USER_KEY}
 ${CA_CERT}
+${TLS_KEY}
 " > $USERNAME.ovpn
 echo "Done"
 }
